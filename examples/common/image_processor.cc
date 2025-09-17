@@ -22,6 +22,7 @@
 #include "image_processor.h"
 
 #include "image_processor_display.h"
+#include "image_processor_python_stream.h"
 #include "image_processor_yolovfastest.h"
 #include "logger.h"
 
@@ -50,6 +51,10 @@ std::shared_ptr<ImageProcessor> CreateImageProcessor(
     }
     if (option.name == std::string("yolovfastest")) {
         return std::make_shared<ImageProcessorYolovFastest>(option.alias);
+    }
+    if (option.name == std::string("python_stream")) {
+        auto endpoint = option.alias.empty() ? std::string("tcp://*:5555") : option.alias;
+        return std::make_shared<ImageProcessorPythonStream>(endpoint);
     }
     return std::make_shared<UndefinedImageProcessor>(option.alias);
 }

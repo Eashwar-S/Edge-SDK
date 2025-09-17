@@ -28,6 +28,7 @@ link_directories(${CMAKE_BINARY_DIR})
 link_libraries(-ledgesdk -lstdc++)
 link_libraries(-lcrypto)
 link_libraries(-lssh2)
+link_libraries(-lzmq)
 
 find_package(OpenCV QUIET)
 if (OpenCV_FOUND)
@@ -83,7 +84,8 @@ if (OpenCV_FOUND AND FFMPEG_FOUND)
             examples/liveview/stream_processor_thread.cc
             examples/common/util_misc.cc
             examples/common/image_processor.cc
-            examples/common/image_processor_yolovfastest.cc)
+            examples/common/image_processor_yolovfastest.cc
+            examples/common/image_processor_python_stream.cc)
 
     link_libraries(${OpenCV_LIBS})
     link_libraries(${FFMPEG_LIBRARIES})
@@ -95,9 +97,15 @@ if (OpenCV_FOUND AND FFMPEG_FOUND)
     target_link_libraries(test_liveview ${SAMPLE_LIB})
     target_link_libraries(test_liveview_dual ${SAMPLE_LIB})
 
-    add_executable(pressure_test examples/test/pressure_test.cc)
-    target_link_libraries(pressure_test ${SAMPLE_LIB})
-endif ()
+      add_executable(pressure_test examples/test/pressure_test.cc)
+      target_link_libraries(pressure_test ${SAMPLE_LIB})
+
+      add_executable(sample_rgb_ir examples/liveview/sample_rgb_ir.cpp)
+      target_link_libraries(sample_rgb_ir ${SAMPLE_LIB})
+
+      add_executable(sample_dual_rgb_ir examples/liveview/sample_dual_rgb_ir.cpp)
+      target_link_libraries(sample_dual_rgb_ir ${SAMPLE_LIB})
+  endif ()
 
 add_library(${SAMPLE_LIB} STATIC ${MODULE_SAMPLE_SRC})
 
